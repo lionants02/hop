@@ -99,6 +99,17 @@ public class CubeInputMeta extends BaseTransformMeta<CubeInput, CubeInputData> {
     GZIPInputStream fis = null;
     DataInputStream dis = null;
     try {
+      /**
+       * skipCopyNr skip Error use ${Internal.Transform.CopyNr} in filename
+       * https://github.com/apache/hop/discussions/5499#discussioncomment-13727431
+       */
+      String skipCopyNr = file.getName();
+      /*
+       * If there is an untranslated message with parameters attached,
+       * meet the condition and skip the step.
+       */
+      if (skipCopyNr != null && skipCopyNr.contains("${")) return;
+
       InputStream is = HopVfs.getInputStream(variables.resolve(file.getName()));
       fis = new GZIPInputStream(is);
       dis = new DataInputStream(fis);
